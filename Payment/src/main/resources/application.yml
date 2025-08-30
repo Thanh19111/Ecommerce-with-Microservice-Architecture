@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: Payment
+
+  cloud:
+    function:
+      definition: processPayment
+    stream:
+      bindings:
+        processPayment-in-0:
+          destination: order-events
+          group: payment-group
+        payment-out-0:
+          destination: payment-events
+
+      kafka:
+        binder:
+          brokers: localhost:9092
+
+server:
+  port: 8083

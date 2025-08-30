@@ -1,0 +1,65 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: order
+  datasource:
+    url: jdbc:mysql://localhost:3306/Order?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  jackson:
+    default-property-inclusion: non_null
+
+  cloud:
+    function:
+      definition: processReservedInventoryFailEvent;processCanceledInventoryFailEvent
+    stream:
+      bindings:
+        sendReservedInventory-out-0:
+          destination: reserve-inventory
+          content-type: application/json
+        processReservedInventoryFailEvent-in-0:
+          destination: fail-order
+          content-type: application/json
+          group: fail-reserve-order-group
+
+        sendCancelInventory-out-0:
+          destination: cancel-inventory
+          content-type: application/json
+        processCanceledInventoryFailEvent-in-0:
+          destination: cancel-fail-order
+          content-type: application/json
+          group: fail-cancel-order-group
+
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+api:
+  prefix: api/v1
+
+feign:
+  client:
+    config:
+      product-service:
+        connect-timeout: 2000
+        read-timeout: 3000
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+  serviceUrl:
+    defaultZone: http://localhost:8761/eureka/

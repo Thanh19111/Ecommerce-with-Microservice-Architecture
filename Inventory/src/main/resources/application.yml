@@ -1,0 +1,73 @@
+server:
+  port: 8090
+
+spring:
+  application:
+    name: inventory
+
+  kafka:
+    admin:
+      auto-create: true
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/Inventory?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  jackson:
+    default-property-inclusion: non_null
+
+  cloud:
+    function:
+      definition: processCreatedProductEvent;processReservedOrderEvent;processCanceledOrderEvent
+    stream:
+      bindings:
+        processCreatedProductEvent-in-0:
+          destination: create-inventory
+          group: inventory-group
+          content-type: application/json
+        processFailedInventoryEvent-out-0:
+          destination: fail-inventory
+          content-type: application/json
+
+        processReservedOrderEvent-in-0:
+          destination: reserve-inventory
+          group: reserve-order-group
+          content-type: application/json
+        processFailedReservedEvent-out-0:
+          destination: fail-order
+          content-type: application/json
+
+        processCanceledOrderEvent-in-0:
+          destination: cancel-inventory
+          group: cancel-order-group
+          content-type: application/json
+        processFailedCanceledEvent-out-0:
+          destination: cancel-fail-order
+          content-type: application/json
+
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+
+api:
+  prefix: api/v1
+
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+  serviceUrl:
+    defaultZone: http://localhost:8761/eureka/

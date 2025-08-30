@@ -1,0 +1,30 @@
+server:
+  port: 9010
+spring:
+  application:
+    name: notification
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    admin:
+      auto-create: true
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+
+  cloud:
+    function:
+      definition: notification;notificationProducer
+    stream:
+      bindings:
+        # CONSUMER
+        notification-in-0:
+          destination: user-created
+          content-type: application/json
+
+        # PRODUCER
+        notificationProducer-out-0:
+          destination: user-created
+          content-type: application/json
