@@ -60,9 +60,6 @@ spring:
           brokers: localhost:9092
           auto-create-topics: true
 
-api:
-  prefix: api/v1
-
 eureka:
   instance:
     preferIpAddress: true
@@ -71,3 +68,9 @@ eureka:
     fetch-registry: true
   serviceUrl:
     defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh, refresh

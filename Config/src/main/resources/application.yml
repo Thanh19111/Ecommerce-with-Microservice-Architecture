@@ -10,7 +10,7 @@ spring:
     config:
       server:
         git:
-          uri: https://github.com/Thanh19111/config-server-test
+          uri: https://github.com/Thanh19111/Config-Server
           clone-on-start: true
           default-label: main
 

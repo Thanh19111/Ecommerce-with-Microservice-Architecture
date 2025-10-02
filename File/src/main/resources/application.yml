@@ -5,10 +5,11 @@ spring:
   application:
     name: image
 
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
-
 file:
   upload-dir: uploads/images
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh, refresh

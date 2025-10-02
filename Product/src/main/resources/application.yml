@@ -26,19 +26,15 @@ spring:
 
   cloud:
     function:
-      definition: processFailInventory
+      definition: processFailedInventory
     stream:
       bindings:
         sendCreateInventory-out-0:
           destination: create-inventory
           content-type: application/json
-        processFailInventory-in-0:
-          destination: fail-inventory
+        processFailedInventory-in-0:
+          destination: cancel-inventory
           group: inventory-fail-group
-          content-type: application/json
-
-        sendCreateProductImage-out-0:
-          destination: create-product-image
           content-type: application/json
       kafka:
         binder:

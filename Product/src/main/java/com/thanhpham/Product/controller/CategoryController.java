@@ -2,8 +2,7 @@ package com.thanhpham.Product.controller;
 
 import com.thanhpham.Product.dto.request.CategoryCreateRequest;
 import com.thanhpham.Product.dto.request.CategoryUpdateRequest;
-import com.thanhpham.Product.dto.request.ProductCreateRequest;
-import com.thanhpham.Product.dto.response.APIResponse;
+import com.thanhpham.Product.dto.response.ApiResponse;
 import com.thanhpham.Product.dto.response.CategoryResponse;
 import com.thanhpham.Product.dto.response.CategoryTreeResponse;
 import com.thanhpham.Product.service.ICategoryService;
@@ -25,50 +24,50 @@ public class CategoryController {
     private final ICategoryService iCategoryService;
 
     @GetMapping("/tree")
-    public ResponseEntity<APIResponse<List<CategoryTreeResponse>>> getCategoryTree() {
+    public ResponseEntity<ApiResponse<List<CategoryTreeResponse>>> getCategoryTree() {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(APIResponse.<List<CategoryTreeResponse>>builder()
+                .body(ApiResponse.<List<CategoryTreeResponse>>builder()
                         .message("Success")
                         .result(iCategoryService.getCategoryTree())
                         .build());
     }
 
     @PostMapping("/create")
-    public ResponseEntity<APIResponse<String>> createCategory(@RequestBody CategoryCreateRequest categoryCreateRequest) {
+    public ResponseEntity<ApiResponse<String>> createCategory(@RequestBody CategoryCreateRequest categoryCreateRequest) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(APIResponse.<String>builder()
+                .body(ApiResponse.<String>builder()
                         .message("Success")
                         .result(iCategoryService.createCategory(categoryCreateRequest))
                         .build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<APIResponse<String>> deleteCategoryRecursively(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<String>> deleteCategoryRecursively(@PathVariable Long id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(APIResponse.<String>builder()
+                .body(ApiResponse.<String>builder()
                         .message("Success")
                         .result(iCategoryService.deleteCategoryRecursively(id))
                         .build());
     }
 
     @PutMapping("")
-    public ResponseEntity<APIResponse<CategoryResponse>> updateCategory(@RequestBody CategoryUpdateRequest categoryUpdateRequest) {
+    public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(@RequestBody CategoryUpdateRequest categoryUpdateRequest) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(APIResponse.<CategoryResponse>builder()
+                .body(ApiResponse.<CategoryResponse>builder()
                         .message("Success")
                         .result(iCategoryService.updateCategory(categoryUpdateRequest))
                         .build());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<APIResponse<CategoryTreeResponse>> findById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<CategoryTreeResponse>> findById(@PathVariable Long id) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(APIResponse.<CategoryTreeResponse>builder()
+                .body(ApiResponse.<CategoryTreeResponse>builder()
                         .message("Success")
                         .result(iCategoryService.findById(id))
                         .build());

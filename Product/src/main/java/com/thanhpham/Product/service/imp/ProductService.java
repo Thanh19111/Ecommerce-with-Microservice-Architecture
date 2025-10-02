@@ -1,6 +1,5 @@
 package com.thanhpham.Product.service.imp;
 
-import com.thanhpham.Product.dto.event.InventoryCreateEvent;
 import com.thanhpham.Product.dto.request.CreateVariantRequest;
 import com.thanhpham.Product.dto.request.ProductCreateRequest;
 import com.thanhpham.Product.dto.request.ProductUpdateRequest;
@@ -11,7 +10,7 @@ import com.thanhpham.Product.entity.*;
 import com.thanhpham.Product.exception.ResourceNotFoundException;
 import com.thanhpham.Product.repository.*;
 import com.thanhpham.Product.service.IProductService;
-import com.thanhpham.Product.service.InventoryEventProducer;
+import com.thanhpham.Product.service.event.InventoryEventProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

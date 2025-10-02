@@ -16,11 +16,12 @@ public class Category {
     private Long id;
     private String name;
     private String description;
+
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @OneToMany(mappedBy = "parent", orphanRemoval = true)
+    @OneToMany(mappedBy = "parent")
     private List<Category> children;
 
     @OneToMany(mappedBy = "category")

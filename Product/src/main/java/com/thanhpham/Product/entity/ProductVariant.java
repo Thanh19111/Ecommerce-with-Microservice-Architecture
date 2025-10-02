@@ -15,7 +15,6 @@ public class ProductVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String skuCode;
     private BigDecimal price;
     private String imageUrl;

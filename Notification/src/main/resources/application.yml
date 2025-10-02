@@ -2,7 +2,7 @@ server:
   port: 9010
 spring:
   application:
-    name: notification
+    name: Notification
 
   kafka:
     bootstrap-servers: localhost:9092
@@ -28,3 +28,9 @@ spring:
         notificationProducer-out-0:
           destination: user-created
           content-type: application/json
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh, refresh

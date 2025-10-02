@@ -4,7 +4,7 @@ import com.thanhpham.Product.entity.ProductImage;
 import com.thanhpham.Product.entity.ProductVariant;
 import com.thanhpham.Product.repository.ProductImageRepository;
 import com.thanhpham.Product.service.IProductImageService;
-import com.thanhpham.Product.service.InventoryEventProducer;
+import com.thanhpham.Product.service.event.InventoryEventProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
