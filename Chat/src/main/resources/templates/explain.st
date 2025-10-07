@@ -1,0 +1,1 @@
+Bạn có thể giúp tôi giải thích ý nghĩa nội dung trong văn bản sau đây {text}

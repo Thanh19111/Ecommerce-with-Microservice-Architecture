@@ -1,12 +1,13 @@
 package com.thanhpham.Chat.controller;
 
-import com.thanhpham.Chat.dto.Message;
+import com.thanhpham.Chat.dto.response.BillDetail;
 import com.thanhpham.Chat.service.ChatService;
+import com.thanhpham.Chat.util.ChuckUtil;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -15,14 +16,12 @@ public class ChatController {
     private final ChatService chatService;
 
     @PostMapping
-    public String chat(@RequestBody Message message){
-        return chatService.chatAI(message);
+    public BillDetail chat(@RequestParam("message") String message, @RequestParam("files") List<MultipartFile> files) {
+        return chatService.imageProcessing(message, files);
     }
 
     @PostMapping("/test")
-    public String test(@RequestBody Message message){
-        return chatService.getMessage(message);
+    public String test(@RequestParam("message") String message){
+        return ChuckUtil.splitByParagraphOrHeading(message).toString();
     }
-
-
 }

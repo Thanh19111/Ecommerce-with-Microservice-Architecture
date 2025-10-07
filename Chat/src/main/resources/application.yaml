@@ -1,6 +1,21 @@
+server:
+  port: 2000
+
 spring:
   application:
-    name=: chat
+    name: chat
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ai_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+      show-sql: true
   ai:
     openai:
       api-key: AIzaSyBOqpXaLIO1ByOdsQ9J8tA2lF-6Ltb76U0
@@ -9,6 +24,8 @@ spring:
         completions-path: /v1beta/openai/chat/completions
         options:
           model: gemini-2.5-flash
-
-server:
-  port: 2000
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always

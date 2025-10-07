@@ -1,0 +1,1 @@
+Hãy tóm tắt đoạn văn sau trong {length} câu: {content}

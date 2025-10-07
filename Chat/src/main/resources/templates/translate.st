@@ -1,0 +1,1 @@
+Hãy dịch đoạn văn bản {text} sang ngôn ngữ {language}
