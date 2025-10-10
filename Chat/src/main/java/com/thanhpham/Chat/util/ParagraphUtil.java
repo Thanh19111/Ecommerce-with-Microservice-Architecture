@@ -12,6 +12,7 @@ public class ParagraphUtil {
     }
 
     // chia 1 đoạn văn thành nhiều câu
+    // pass
     public static List<String> splitToSentences(String text) {
         List<String> sentences = new ArrayList<>();
         BreakIterator iterator = BreakIterator.getSentenceInstance(Locale.forLanguageTag("vi"));
@@ -21,7 +22,7 @@ public class ParagraphUtil {
             String sentence = text.substring(start, end).trim();
             if (!sentence.isEmpty()) sentences.add(sentence);
         }
-        // fallback: if none, return whole
+        // fallback: nếu mảng rỗng, trả về toàn bộ văn bản
         if (sentences.isEmpty() && !text.isBlank()) sentences.add(text.trim());
         return sentences;
     }

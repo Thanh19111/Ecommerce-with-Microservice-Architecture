@@ -20,7 +20,7 @@ public class ProductImageService implements IProductImageService {
         ProductImage productImage = new ProductImage();
         productImage.setProductVariant(productVariant);
         productImage = productImageRepository.save(productImage);
-        inventoryEventProducer.sendCreateProductImage(productVariant,productImage, file);
+        //inventoryEventProducer.sendCreateProductImage(productVariant,productImage, file);
         return "Processing";
     }
 

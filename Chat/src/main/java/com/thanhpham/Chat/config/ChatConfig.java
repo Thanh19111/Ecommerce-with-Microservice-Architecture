@@ -1,6 +1,6 @@
 package com.thanhpham.Chat.config;
 
-import com.thanhpham.Chat.util.ChatInfor;
+import com.thanhpham.Chat.util.Infor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class ChatConfig {
     @Bean
     public ChatClient ChatClientConfig(ChatClient.Builder builder, ChatMemory chatMemory){
-        return builder.defaultSystem(ChatInfor.INFOR).defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build()).build();
+        return builder.defaultSystem(Infor.NAME).defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build()).build();
     }
 
     @Bean

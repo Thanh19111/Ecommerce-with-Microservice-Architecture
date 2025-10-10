@@ -8,13 +8,15 @@ import java.util.List;
 import java.util.Set;
 
 public class SentenceUtil {
-    // --- utilities ---
+    //pass
     public static int countTokensNaive(String text) {
         if (text == null || text.isBlank()) return 0;
         // đếm từ đã chuẩn hóa và thay thế với token hóa
         return text.trim().split("\\s+").length;
     }
 
+    // đếm vị trí đầu câu trong đoạn
+    //pass
     public static int findOffsetOfSentence(String section, List<String> sentences, int sentenceIndex) {
         // lặp đếm các từ chuẩn hóa
         int pos = 0;
@@ -23,6 +25,8 @@ public class SentenceUtil {
         return Math.min(pos, Math.max(0, section.length()-1));
     }
 
+    // đếm vị trí cuối câu
+    // pass
     public static int findOffsetOfSentenceEnd(String section, List<String> sentences, int sentenceIndex) {
         int pos = 0;
         for (int i = 0; i <= sentenceIndex; i++) pos += sentences.get(i).length() + 1;
@@ -30,7 +34,8 @@ public class SentenceUtil {
     }
 
     // băm text thành mã hash
-    private static String sha256(String s) {
+    // pass
+    public static String sha256(String s) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(s.getBytes(StandardCharsets.UTF_8));
@@ -43,7 +48,8 @@ public class SentenceUtil {
     }
 
     // shingle-based Jaccard similarity
-    private static double jaccardShingleSimilarity(String a, String b, int k) {
+    //pass
+    public static double jaccardShingleSimilarity(String a, String b, int k) {
         Set<String> sa = shingles(a, k);
         Set<String> sb = shingles(b, k);
         if (sa.isEmpty() || sb.isEmpty()) return 0.0;
@@ -54,7 +60,8 @@ public class SentenceUtil {
         return (double) inter.size() / (double) uni.size();
     }
 
-    private static Set<String> shingles(String text, int k) {
+    //pass
+    public static Set<String> shingles(String text, int k) {
         String[] words = text.toLowerCase().replaceAll("[^\\p{L}\\p{Nd}\\s]+"," ").split("\\s+");
         Set<String> set = new HashSet<>();
         for (int i = 0; i + k <= words.length; i++) {
