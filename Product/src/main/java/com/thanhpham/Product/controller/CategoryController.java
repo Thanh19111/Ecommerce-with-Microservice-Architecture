@@ -53,7 +53,7 @@ public class CategoryController {
                         .build());
     }
 
-    @PutMapping("")
+    @PutMapping
     public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(@RequestBody CategoryUpdateRequest categoryUpdateRequest) {
         return ResponseEntity
                 .status(HttpStatus.OK)

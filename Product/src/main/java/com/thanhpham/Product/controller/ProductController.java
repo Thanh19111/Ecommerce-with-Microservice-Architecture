@@ -3,6 +3,7 @@ package com.thanhpham.Product.controller;
 import com.thanhpham.Product.dto.request.ProductCreateRequest;
 import com.thanhpham.Product.dto.request.ProductUpdateRequest;
 import com.thanhpham.Product.dto.response.*;
+import com.thanhpham.Product.entity.Product;
 import com.thanhpham.Product.service.IProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping(path = "/products", produces = {MediaType.APPLICATION_JSON_VALUE})
@@ -51,6 +53,16 @@ public class ProductController {
                         .build());
     }
 
+    @PostMapping("/image")
+    public ResponseEntity<ApiResponse<ProductResponse>> updateProductImage(@RequestParam("id") Long id, @RequestParam("file")MultipartFile file){
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.<ProductResponse>builder()
+                        .message("Success")
+                        .result(iProductService.updateImageUrl(id, file))
+                        .build());
+    }
+
     @GetMapping("/category/{id}")
     public ResponseEntity<ApiResponse<ProductTreeResponse>> findAllProductByCategoryId(@PathVariable Long id) {
         return ResponseEntity
@@ -61,7 +73,7 @@ public class ProductController {
                         .build());
     }
 
-    @PutMapping("")
+    @PutMapping
     public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(@RequestBody ProductUpdateRequest productUpdateRequest) {
         return ResponseEntity
                 .status(HttpStatus.OK)

@@ -16,6 +16,7 @@ public class ProductResponse {
     private String name;
     private String description;
     private String brand;
+    private String imageUrl;
     private CategoryResponse category;
     private List<ProductVariantResponse> variants;
 
@@ -25,6 +26,7 @@ public class ProductResponse {
         dto.setName(product.getName());
         dto.setDescription(product.getDescription());
         dto.setBrand(product.getBrand());
+        dto.setImageUrl(product.getImageUrl());
         dto.setCategory(CategoryResponse.fromEntity(product.getCategory()));
         List<ProductVariant> productVariants = product.getVariants();
         List<ProductVariantResponse> responses = new ArrayList<>();

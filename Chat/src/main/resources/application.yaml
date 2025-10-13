@@ -9,13 +9,6 @@ spring:
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-      show-sql: true
   ai:
     openai:
       api-key: none
@@ -26,7 +19,7 @@ spring:
           model: text-embedding-nomic-embed-text-v2-moe
           dimensions: 768
       chat:
-        api-key: api_key
+        api-key: AIzaSyBOqpXaLIO1ByOdsQ9J8tA2lF-6Ltb76U0
         base-url: https://generativelanguage.googleapis.com
         completions-path: /v1beta/openai/chat/completions
         options:
@@ -42,7 +35,7 @@ spring:
         index-type: HNSW
         distance-type: COSINE_DISTANCE
         dimensions: 768
-        max-document-batch-size: 10000
+        max-document-batch-size: 1000
         schema-validation: true
         table-name: vector_store
 

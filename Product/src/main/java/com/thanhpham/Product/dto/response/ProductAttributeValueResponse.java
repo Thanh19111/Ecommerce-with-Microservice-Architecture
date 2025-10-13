@@ -17,7 +17,7 @@ public class ProductAttributeValueResponse {
         ProductAttributeValueResponse dto = new ProductAttributeValueResponse();
         dto.setId(productAttributeValue.getId());
         dto.setAttributeName(productAttributeValue.getAttribute().getName());
-        dto.setValue(productAttributeValue.getValue().getValue());
+        dto.setValue(productAttributeValue.getAttributeValue().getValue());
         return dto;
     }
 }

@@ -21,9 +21,10 @@ public class Category {
     @JoinColumn(name = "parent_id")
     private Category parent;
 
-    @OneToMany(mappedBy = "parent")
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Category> children;
 
+    // khong dung cascade
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 }

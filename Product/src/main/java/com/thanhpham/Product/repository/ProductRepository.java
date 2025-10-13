@@ -9,7 +9,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
-    List<Product> findAllByCategory(Category category);
     List<Product> findAllByCategoryId(Long categoryId);
     void deleteByCategory(Category category);
     boolean existsByCategoryId(Long parentId);

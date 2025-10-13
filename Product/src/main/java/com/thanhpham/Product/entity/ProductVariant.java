@@ -17,15 +17,14 @@ public class ProductVariant {
     private Long id;
     private String skuCode;
     private BigDecimal price;
-    private String imageUrl;
 
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @OneToMany(mappedBy = "variant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductAttributeValue> attributes;
 
-    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "productVariant", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductImage> images;
 }

@@ -3,6 +3,7 @@ package com.thanhpham.Chat.service;
 import com.thanhpham.Chat.component.PromptRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -28,7 +29,7 @@ public class RagService {
         return documents;
     }
 
-    public String retrieveAndGenerate(String message) {
+    public String retrieveAndGenerate(String conversationId, String message) {
         List<Document> similarDocuments = vectorStore
                 .similaritySearch(SearchRequest
                         .builder()
@@ -39,15 +40,17 @@ public class RagService {
         String information = "no content";
         System.out.println(">>> Similar documents: " + similarDocuments);
         if(similarDocuments != null){
-           information = similarDocuments.stream()
+            information = similarDocuments.stream()
                     .map(Document::getText)
                     .collect(Collectors.joining("\n"));
         }
 
         System.out.println(">>> Prompt: " + information);
         PromptTemplate template = promptRegistry.get("rag-prompt");
-        return chatClient.prompt(template.render(Map.of("information", information,
-                "question", message))).call().content();
+        return chatClient
+                .prompt(template.render(Map.of("information", information, "question", message)))
+                .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId))
+                .call().content();
     }
 
 }

@@ -22,46 +22,47 @@ public class ChatService {
     private final PromptRegistry promptRegistry;
     private final ChatClient chatClient;
 
-    public String summerize(String content, String length){
-        String conversationId = "001";
+    public String summerize(String conversationId, String content, String length){
         PromptTemplate template = promptRegistry.get("summarize");
+
         return chatClient
                 .prompt(template.render(Map.of("length", length, "content", content)))
                 .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId))
                 .call().content();
     }
 
-    public String chat(String message){
-        String conversationId = "001";
+    public String chat(String conversationId, String message){
         return chatClient.prompt()
                 .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId))
                 .user(message).call().content();
     }
 
-    public String chatWithImage(String message, List<MultipartFile> files){
-        String conversationId = "001";
+    public String chatWithImage(String conversationId, String message, List<MultipartFile> files){
         List<Media> media = files.stream().map(
                 img -> new Media(MimeTypeUtils.IMAGE_PNG, img.getResource())
         ).toList();
-        UserMessage userMessage = UserMessage.builder().media(media).text(message).build();
+
+        UserMessage userMessage = UserMessage.builder()
+                .media(media)
+                .text(message).build();
+
         return chatClient.prompt()
                .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId))
                .messages(userMessage).call().content();
     }
 
-    public BillDetail imageProcessing(String message, List<MultipartFile> files){
-
-        String conversationId = "001";
+    public BillDetail imageProcessing(List<MultipartFile> files){
 
         List<Media> media = files.stream().map(
                 img -> new Media(MimeTypeUtils.IMAGE_PNG, img.getResource())
         ).toList();
 
-        UserMessage userMessage = UserMessage.builder().text(message).media(media).build();
+        UserMessage userMessage = UserMessage.builder()
+                .text("Get detail from image")
+                .media(media).build();
 
         return chatClient.prompt()
-                .advisors(advisorSpec -> advisorSpec.param(ChatMemory.CONVERSATION_ID, conversationId))
-                .user("Get detail from image").messages(userMessage).call().entity(new ParameterizedTypeReference<>() {
+                .messages(userMessage).call().entity(new ParameterizedTypeReference<>() {
         });
     }
 

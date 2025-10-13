@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,6 +31,7 @@ public class ProductService implements IProductService {
     private final AttributeRepository attributeRepository;
     private final AttributeValueRepository attributeValueRepository;
     private final InventoryEventProducer inventoryEventProducer;
+    private final ProductImageService productImageService;
 
     @Transactional
     @Override
@@ -37,6 +40,8 @@ public class ProductService implements IProductService {
         Product product = new Product();
         product.setName(request.getName());
         product.setDescription(request.getDescription());
+        product.setCreatedAt(LocalDateTime.now());
+        product.setCreatedBy("SYSTEM");
         product.setCategory(categoryRepository.findById(request.getCategoryId()).orElseThrow(
                 ()-> new ResourceNotFoundException("Category","CategoryId",request.getCategoryId().toString())));
         if(categoryRepository.hasChildren(request.getCategoryId()))
@@ -51,7 +56,6 @@ public class ProductService implements IProductService {
         for (CreateVariantRequest variantRequest : request.getVariants()) {
             ProductVariant variant = new ProductVariant();
             variant.setPrice(variantRequest.getPrice());
-            variant.setImageUrl(UUID.randomUUID().toString());
             variant.setSkuCode(UUID.randomUUID().toString());
             variant.setProduct(product);
             variant = productVariantRepository.save(variant);
@@ -59,11 +63,11 @@ public class ProductService implements IProductService {
             //Mapping variant ↔ attributes
             for (VariantAttributeRequest attr : variantRequest.getAttributes()) {
                 ProductAttributeValue pav = new ProductAttributeValue();
-                pav.setVariant(variant);
+                pav.setProductVariant(variant);
                 pav.setAttribute(attributeRepository.findById(attr.getAttributeId()).orElseThrow(
                         () -> new ResourceNotFoundException("Attribute","AttributeId",attr.getAttributeId().toString())
                 ));
-                pav.setValue(attributeValueRepository.findById(attr.getAttributeValueId()).orElseThrow(
+                pav.setAttributeValue(attributeValueRepository.findById(attr.getAttributeValueId()).orElseThrow(
                         () -> new ResourceNotFoundException("AttributeValue","AttributeValueId",attr.getAttributeValueId().toString())
                 ));
 
@@ -74,7 +78,6 @@ public class ProductService implements IProductService {
             inventoryEventProducer.sendCreateInventory(variant, variantRequest.getStock());
         }
 
-
         //Trả về kết quả
         return "Product created successfully!";
     }
@@ -82,7 +85,7 @@ public class ProductService implements IProductService {
     @Override
     @Transactional
     public ProductResponse updateProduct(ProductUpdateRequest productUpdateRequest) {
-        Product product = findByProductIdEntity(productUpdateRequest.getId());
+        Product product = findById(productUpdateRequest.getId());
         product.setName(productUpdateRequest.getName());
         product.setBrand(productUpdateRequest.getBrand());
         product.setDescription(productUpdateRequest.getDescription());
@@ -93,11 +96,11 @@ public class ProductService implements IProductService {
     @Override
     @Transactional(readOnly = true)
     public ProductResponse findByProductId(Long id) {
-        Product product = findByProductIdEntity(id);
+        Product product = findById(id);
         return ProductResponse.fromEntity(product);
     }
 
-    private Product findByProductIdEntity(Long id)
+    private Product findById(Long id)
     {
         return productRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("Product","ProductId",id.toString())
@@ -119,7 +122,7 @@ public class ProductService implements IProductService {
     @Transactional
     public String deleteProduct(Long id) {
 
-        Product product = findByProductIdEntity(id);
+        Product product = findById(id);
         List<ProductVariant> productVariants = product.getVariants();
         for (ProductVariant productVariant: productVariants)
         {
@@ -134,16 +137,12 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public String updateImageUrl(Long id, String url) {
-        return "";
+    public ProductResponse updateImageUrl(Long id, MultipartFile file) {
+        Product product = findById(id);
+        return ProductResponse.fromEntity(productImageService.createThumbnail(product, file));
     }
 
-    @Override
-    public String createProductImage(Long id, List<MultipartFile> files) {
-        return "";
-    }
-
-
+// ko dung
     private void getDetail(ProductTreeResponse category) {
         if (isLeaf(category)) {
             List<Product> products = productRepository.findAllByCategoryId(category.getId());
@@ -161,5 +160,4 @@ public class ProductService implements IProductService {
     private boolean isLeaf(ProductTreeResponse category) {
         return category.getChildren() == null || category.getChildren().isEmpty();
     }
-
 }

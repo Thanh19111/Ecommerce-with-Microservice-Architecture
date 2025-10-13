@@ -1,5 +1,5 @@
 server:
-  port: 9021
+  port: 8000
 
 spring:
   application:
@@ -40,14 +40,12 @@ spring:
         binder:
           brokers: localhost:9092
           auto-create-topics: true
-api:
-  prefix: api/v1
 
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    register-with-eureka: true
-    fetch-registry: true
-  serviceUrl:
-    defaultZone: http://localhost:8761/eureka/
+#eureka:
+#  instance:
+#    preferIpAddress: true
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#  serviceUrl:
+#    defaultZone: http://localhost:8761/eureka/

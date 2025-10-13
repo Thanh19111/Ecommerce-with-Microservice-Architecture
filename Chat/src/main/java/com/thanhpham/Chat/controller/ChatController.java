@@ -18,31 +18,31 @@ public class ChatController {
     private final RagService ragService;
 
     @PostMapping
-    public String chat(@RequestParam("message") String message){
-        return chatService.chat(message);
+    public String chat(@RequestParam("conversationId") String conversationId, @RequestParam("message") String message){
+        return chatService.chat(conversationId, message);
     }
 
-    @PostMapping("/orc")
-    public BillDetail orc(@RequestParam("message") String message, @RequestParam("files") List<MultipartFile> files) {
-        return chatService.imageProcessing(message, files);
+    @PostMapping("/ocr")
+    public BillDetail ocr(@RequestParam("files") List<MultipartFile> files) {
+        return chatService.imageProcessing(files);
     }
 
     @PostMapping("/analyze")
-    public String analyze(@RequestParam("message") String message, @RequestParam("files") List<MultipartFile> files){
-        return chatService.chatWithImage(message, files);
+    public String analyze(@RequestParam("conversationId") String conversationId, @RequestParam("message") String message, @RequestParam("files") List<MultipartFile> files){
+        return chatService.chatWithImage(conversationId, message, files);
     }
 
     @PostMapping("/summerize")
-    public String summerize(@RequestParam("message") String message, @RequestParam("length") String length){
-        return chatService.summerize(message, length);
+    public String summerize(@RequestParam("conversationId") String conversationId, @RequestParam("message") String message, @RequestParam("length") String length){
+        return chatService.summerize(conversationId, message, length);
     }
 
-    @PostMapping("/test")
-    public String test(@RequestParam("message") String message){
-        return ragService.retrieveAndGenerate(message);
+    @PostMapping("/search")
+    public String search(@RequestParam("conversationId") String conversationId, @RequestParam("message") String message){
+        return ragService.retrieveAndGenerate(conversationId, message);
     }
 
-    @PostMapping("/rag")
+    @PostMapping("/embed")
     public List<Document> rag(@RequestParam("message") String message){
         return ragService.embedding(message);
     }

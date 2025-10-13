@@ -15,13 +15,13 @@ public class ProductAttributeValue {
 
     @ManyToOne
     @JoinColumn(name = "variant_id")
-    private ProductVariant variant;
+    private ProductVariant productVariant;
 
     @ManyToOne
     @JoinColumn(name = "attribute_id")
     private Attribute attribute;
 
     @ManyToOne
-    @JoinColumn(name = "value_id")
-    private AttributeValue value;
+    @JoinColumn(name = "attribute_value_id")
+    private AttributeValue attributeValue;
 }

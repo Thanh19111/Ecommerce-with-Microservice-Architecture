@@ -4,6 +4,7 @@ import com.thanhpham.Product.dto.request.ProductCreateRequest;
 import com.thanhpham.Product.dto.request.ProductUpdateRequest;
 import com.thanhpham.Product.dto.response.ProductResponse;
 import com.thanhpham.Product.dto.response.ProductTreeResponse;
+import com.thanhpham.Product.entity.Product;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -14,6 +15,5 @@ public interface IProductService {
     ProductResponse findByProductId(Long id);
     ProductTreeResponse findAllProductByCategoryId(Long id);
     String deleteProduct(Long id);
-    String updateImageUrl(Long id, String url);
-    String createProductImage(Long id, List<MultipartFile> files);
+    ProductResponse updateImageUrl(Long id, MultipartFile file);
 }

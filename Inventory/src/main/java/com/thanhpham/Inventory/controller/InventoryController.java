@@ -30,36 +30,6 @@ public class InventoryController {
                         .build());
     }
 
-    @PostMapping("/reserve")
-    public ResponseEntity<APIResponse<String>> reserveInventory(@RequestBody InventoryUpdateRequest updateRequest) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(APIResponse.<String>builder()
-                        .message("Success")
-                        .result(inventoryService.reserveInventory(updateRequest))
-                        .build());
-    }
-
-    @PostMapping("/release")
-    public ResponseEntity<APIResponse<String>> releaseInventory(@RequestBody InventoryUpdateRequest updateRequest) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(APIResponse.<String>builder()
-                        .message("Success")
-                        .result(inventoryService.releaseInventory(updateRequest))
-                        .build());
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<APIResponse<String>> releaseInventory(@RequestBody InventoryCreateRequest createRequest) {
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(APIResponse.<String>builder()
-                        .message("Success")
-                        .result(inventoryService.createInventory(createRequest))
-                        .build());
-    }
-
     @PostMapping("/{variantId}/stock")
     public ResponseEntity<APIResponse<InventoryStockResponse>> releaseInventory(@PathVariable Long variantId) {
         return ResponseEntity
