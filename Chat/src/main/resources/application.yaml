@@ -19,7 +19,7 @@ spring:
           model: text-embedding-nomic-embed-text-v2-moe
           dimensions: 768
       chat:
-        api-key: AIzaSyBOqpXaLIO1ByOdsQ9J8tA2lF-6Ltb76U0
+        api-key: ""
         base-url: https://generativelanguage.googleapis.com
         completions-path: /v1beta/openai/chat/completions
         options:

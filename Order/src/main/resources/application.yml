@@ -22,12 +22,14 @@ spring:
 
   cloud:
     function:
-      definition: processReservedInventoryFailEvent;processCanceledInventoryFailEvent
+      definition: processReservedInventoryFailEvent;processCanceledInventoryFailEvent;processFailedPaymentEvent;processSuccessPaymentEvent
     stream:
       bindings:
         sendReservedInventory-out-0:
           destination: reserve-inventory
           content-type: application/json
+          producer:
+            partition-key-expression: payload.orderId
         processReservedInventoryFailEvent-in-0:
           destination: fail-order
           content-type: application/json
@@ -36,10 +38,30 @@ spring:
         sendCancelInventory-out-0:
           destination: cancel-inventory
           content-type: application/json
+          producer:
+            partition-key-expression: payload.orderId
         processCanceledInventoryFailEvent-in-0:
           destination: cancel-fail-order
           content-type: application/json
           group: fail-cancel-order-group
+
+        #payment
+        sendPaymentEvent-out-0:
+          destination: order-payment
+          content-type: application/json
+          producer:
+            partition-key-expression: payload.orderId
+
+        processFailedPaymentEvent-in-0:
+          destination: fail-payment
+          content-type: application/json
+          group: fail-payment-group
+
+        processSuccessPaymentEvent-in-0:
+          destination: success-payment
+          content-type: application/json
+          group: success-payment-group
+        #
 
       kafka:
         binder:

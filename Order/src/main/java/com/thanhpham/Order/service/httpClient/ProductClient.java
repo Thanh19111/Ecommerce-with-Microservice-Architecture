@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 
 //name de anh xa voi cau hinh trong file yml
 //url duong dan tinh hoac thay bang url eureka
-@FeignClient(name = "product-service")
+@FeignClient(name = "product-service", url = "http://localhost:8000")
 public interface ProductClient {
     @GetMapping("/variants/price/{variantId}")
     BigDecimal getPrice(@PathVariable("variantId") Long variantId);

@@ -35,6 +35,8 @@ spring:
           destination: create-inventory
           group: inventory-group
           content-type: application/json
+          producer:
+            partition-key-expression: payload.orderId
         processFailedInventoryEvent-out-0:
           destination: fail-inventory
           content-type: application/json
@@ -43,6 +45,8 @@ spring:
           destination: reserve-inventory
           group: reserve-order-group
           content-type: application/json
+          producer:
+            partition-key-expression: payload.orderId
         processFailedReservedEvent-out-0:
           destination: fail-order
           content-type: application/json
@@ -51,6 +55,8 @@ spring:
           destination: cancel-inventory
           group: cancel-order-group
           content-type: application/json
+          producer:
+            partition-key-expression: payload.orderId
         processFailedCanceledEvent-out-0:
           destination: cancel-fail-order
           content-type: application/json

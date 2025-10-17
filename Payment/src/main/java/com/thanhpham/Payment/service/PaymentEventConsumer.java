@@ -1,55 +1,49 @@
 package com.thanhpham.Payment.service;
 
-import com.thanhpham.Payment.model.PaymentCompletedEvent;
-import com.thanhpham.Payment.model.PaymentRequestEvent;
-import com.thanhpham.Payment.util.KafkaMessageBuilder;
+import com.thanhpham.Payment.dto.request.OrderCreateEvent;
+import com.thanhpham.Payment.dto.request.PaymentFailedEvent;
+import com.thanhpham.Payment.dto.request.PaymentSuccessEvent;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 
-import java.util.Map;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 @Configuration
 @RequiredArgsConstructor
-@Slf4j
 public class PaymentEventConsumer {
-
-    private final KafkaMessageBuilder kafkaMessageBuilder;
     private final StreamBridge streamBridge;
 
     @Bean
-    Consumer<PaymentRequestEvent> processPayment(){
+    public Consumer<OrderCreateEvent> processOrderPayment() {
         return event -> {
             try{
-                //co the throw exception
-                //xu ly payment o day
-                log.info(event.toString());
-                Message<PaymentCompletedEvent> message = kafkaMessageBuilder.buildMessageWithHeaders(
-                        new PaymentCompletedEvent(event.getOrderId(), "COMPLETED"),
-                        event.getOrderId(), Map.of(
-                                "eventType", "PAYMENT_SUCCESS",
-                                "correlationId", UUID.randomUUID().toString()
-                        )
-                );
-                streamBridge.send("payment-out-0",message);
-                log.info("Sent payment success event for orderId: {}", event.getOrderId());
+                // xu ly thanh toan
+                System.out.println(">> Thanh toán thành công");
+                System.out.println(event.getOrderId());
+                // gia lap thanh toan thanh cong
+                PaymentSuccessEvent successEvent = new PaymentSuccessEvent();
+                successEvent.setOrderId(event.getOrderId());
+                streamBridge.send("sendSuccessPayment-out-0",
+                        MessageBuilder
+                                .withPayload(successEvent)
+                                .setHeader("partitionKey", event.getOrderId()) // giữ đúng orderId
+                                .setHeader("eventType", "OrderSuccess")
+                                .build());
             }catch (Exception e){
-                log.error(e.getMessage());
-                Message<PaymentCompletedEvent> message = kafkaMessageBuilder.buildMessageWithHeaders(
-                        new PaymentCompletedEvent(event.getOrderId(), "FAILED"),
-                        event.getOrderId(), Map.of(
-                                "eventType", "PAYMENT_FAILURE",
-                                "correlationId", UUID.randomUUID().toString()
-                        )
-                );
-                streamBridge.send("payment-out-0",message);
-                log.info("Sent payment failure event for orderId: {}", event.getOrderId());
+                System.out.println(">> Thanh toán thất bại");
+                PaymentFailedEvent failedEvent = new PaymentFailedEvent();
+                failedEvent.setOrderId(event.getOrderId());
+                streamBridge.send("sendFailedPayment-out-0",
+                        MessageBuilder
+                                .withPayload(failedEvent)
+                                .setHeader("partitionKey", event.getOrderId()) // giữ đúng orderId
+                                .setHeader("eventType", "OrderSuccess")
+                                .build());
             }
         };
     }
+
 }

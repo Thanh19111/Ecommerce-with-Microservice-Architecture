@@ -1,6 +1,7 @@
 package com.thanhpham.Order.service;
 
-import com.thanhpham.Order.dto.event.*;
+import com.thanhpham.Order.dto.event.PaymentFailedEvent;
+import com.thanhpham.Order.dto.event.PaymentSuccessEvent;
 import com.thanhpham.Order.entity.Order;
 import com.thanhpham.Order.entity.OrderStatus;
 import com.thanhpham.Order.repository.OrderRepository;
@@ -14,30 +15,29 @@ import java.util.function.Consumer;
 
 @Configuration
 @RequiredArgsConstructor
-public class InventoryEventConsumer {
-
+public class OrderEventConsumer {
+    private final OrderService orderService;
     private final OrderRepository orderRepository;
 
     @Bean
-    public Consumer<InventoryReservedFailEvent> processReservedInventoryFailEvent() {
-        return event -> {
-            orderRepository.deleteById(event.getOrderId());
-            System.err.println(event.getReason());
-        };
-    }
-
-
-    @Bean
-    public Consumer<InventoryCanceledFailEvent> processCanceledInventoryFailEvent() {
+    public Consumer<PaymentSuccessEvent> processSuccessPaymentEvent() {
         return event -> {
             Optional<Order> orderOptional = orderRepository.findById(event.getOrderId());
             if (orderOptional.isPresent()) {
                 Order order = orderOptional.get();
-                order.setStatus(OrderStatus.FAILED_CANCEL);
+                order.setStatus(OrderStatus.CONFIRMED);
                 orderRepository.save(order);
             } else {
                 System.err.println("Order not found with ID: " + event.getOrderId());
             }
         };
     }
+
+    @Bean
+    public Consumer<PaymentFailedEvent> processFailedPaymentEvent() {
+        return event -> {
+            orderService.cancelOrder(event.getOrderId());
+        };
+    }
+
 }

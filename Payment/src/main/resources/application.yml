@@ -4,18 +4,35 @@ spring:
 
   cloud:
     function:
-      definition: processPayment
+      definition: processOrderPayment
     stream:
       bindings:
-        processPayment-in-0:
-          destination: order-events
+        processOrderPayment-in-0:
+          destination: order-payment
+          content-type: application/json
           group: payment-group
-        payment-out-0:
-          destination: payment-events
+        sendSuccessPayment-out-0:
+          destination: success-payment
+          content-type: application/json
+          producer:
+            partition-key-expression: payload.orderId
+
+        sendFailedPayment-out-0:
+          destination: fail-payment
+          content-type: application/json
+          producer:
+            partition-key-expression: payload.orderId
 
       kafka:
         binder:
           brokers: localhost:9092
+          auto-create-topics: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: busrefresh, refresh
 
 server:
   port: 8083

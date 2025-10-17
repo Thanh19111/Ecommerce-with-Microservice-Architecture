@@ -1,6 +1,5 @@
 package com.thanhpham.Order.service.imp;
 
-import ch.qos.logback.core.util.StringUtil;
 import com.thanhpham.Order.dto.request.OrderCreateRequest;
 import com.thanhpham.Order.dto.request.OrderItemRequest;
 import com.thanhpham.Order.dto.response.OrderResponse;
@@ -12,8 +11,8 @@ import com.thanhpham.Order.exception.ResourceNotFoundException;
 import com.thanhpham.Order.repository.OrderRepository;
 import com.thanhpham.Order.service.IOrderService;
 import com.thanhpham.Order.service.InventoryEventProducer;
+import com.thanhpham.Order.service.OrderEventProducer;
 import com.thanhpham.Order.service.httpClient.ProductClient;
-import com.thanhpham.Order.service.httpClient.UserClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +28,11 @@ public class OrderService implements IOrderService {
     private final OrderRepository orderRepository;
     private final ProductClient productClient;
     private final InventoryEventProducer inventoryEventProducer;
-    private final UserClient userClient;
+    private final OrderEventProducer orderEventProducer;
 
     @Override
     @Transactional
     public String createOrder(OrderCreateRequest request) {
-        if(!userClient.doesUserExist(request.getUserId())){
-            throw new BadRequestException("User does not exist");
-        }
         Order order = new Order();
         order.setUserId(request.getUserId());
         order.setCreatedAt(LocalDateTime.now());
@@ -64,8 +60,9 @@ public class OrderService implements IOrderService {
 
         order.setTotalAmount(total);
         order.setOrderItems(orderItems);
-        order = orderRepository.save(order);
+        orderRepository.save(order);
         inventoryEventProducer.sendReservedInventory(order.getId(), orderItems);
+        orderEventProducer.sendPaymentEvent(order.getId());
         return "Order is processing";
     }
 
